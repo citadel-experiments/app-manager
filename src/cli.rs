@@ -44,11 +44,12 @@ struct PortCacheMapEntry {
 // Outside port -> app
 type PortCacheMap = HashMap<u16, PortCacheMapEntry>;
 
-static RESERVED_PORTS: [u16; 4] = [
+static RESERVED_PORTS: [u16; 5] = [
     80,   // Dashboard
-    433,  // Sometimes used by nginx with some setups
     443,  // Dashboard SSL
+    8080, // LND REST
     8333, // Bitcoin Core P2P
+    10009,// LND gRPC
 ];
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
