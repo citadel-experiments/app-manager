@@ -327,6 +327,32 @@ fn convert_volumes(
                             bail!("bitcoin mount defined as map, but only string is supported");
                         }
                     }
+                    "lnd" => {
+                        if !permissions.contains(&&"lnd".to_string()) {
+                            bail!("lnd mount defined by container without LND permissions");
+                        }
+                        if let StringOrMap::String(lnd_mount) = value {
+                            service
+                                .volumes
+                                .push(format!("${{LND_DATA_DIR}}:{}", lnd_mount));
+                        } else {
+                            bail!("LND mount must be a string");
+                        }
+                    }
+                    "c_lightning" => {
+                        if !permissions.contains(&&"c-lightning".to_string()) {
+                            bail!(
+                                "c-lightning mount defined by container without Core Lightning permissions",
+                            );
+                        }
+                        if let StringOrMap::String(c_lightning_mount) = value {
+                            service
+                                .volumes
+                                .push(format!("${{C_LIGHTNING_DATA_DIR}}:{}", c_lightning_mount));
+                        } else {
+                            bail!("LND mount must be a string");
+                        }
+                    }
                     "jwt-public-key" => {
                         if let StringOrMap::String(jwt_pubkey_mount) = value {
                             service
@@ -593,11 +619,6 @@ pub fn convert_config(
     let replace_env_vars = HashMap::<String, String>::from([
         (env_var, main_port.to_string()),
         ("ELECTRUM_IP".to_string(), "${APP_ELECTRUM_IP}".to_string()),
-        ("LND_IP".to_string(), "${APP_LND_SERVICE_IP}".to_string()),
-        (
-            "C_LIGHTNING_IP".to_string(),
-            "${APP_CORE_LIGHTNING_SERVICE_IP}".to_string(),
-        ),
         ("ELECTRUM_PORT".to_string(), "50001".to_string()),
     ]);
 
