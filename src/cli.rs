@@ -79,7 +79,7 @@ pub fn convert_dir(citadel_root: &str, caddy_url: &Option<String>) -> Result<()>
             https_options = user_json.https;
         }
     }
-    services.append(&mut vec!["bitcoind".to_string(), "lnd".to_string()]);
+    services.append(&mut vec!["bitcoind".to_string()]);
 
     let mut citadel_seed = None;
 

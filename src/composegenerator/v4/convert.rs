@@ -103,7 +103,10 @@ fn configure_ports(
 
         if let Some(internal_port) = original_definition.port {
             if service_name != main_container {
-                bail!("port: is not supported for containers other than the main container",);
+                bail!("port: is not supported for containers other than the main container");
+            }
+            if service.network_mode == Some("host".to_string()) {
+                continue;
             }
             let public_port: Option<&PortMapElement>;
             let fake_port = PortMapElement {
@@ -322,32 +325,6 @@ fn convert_volumes(
                                 .push(format!("${{BITCOIN_DATA_DIR}}:{bitcoin_path}"));
                         } else {
                             bail!("bitcoin mount defined as map, but only string is supported");
-                        }
-                    }
-                    "lnd" => {
-                        if !permissions.contains(&&"lnd".to_string()) {
-                            bail!("lnd mount defined by container without LND permissions");
-                        }
-                        if let StringOrMap::String(lnd_mount) = value {
-                            service
-                                .volumes
-                                .push(format!("${{LND_DATA_DIR}}:{}", lnd_mount));
-                        } else {
-                            bail!("LND mount must be a string");
-                        }
-                    }
-                    "c_lightning" => {
-                        if !permissions.contains(&&"c-lightning".to_string()) {
-                            bail!(
-                                "c-lightning mount defined by container without Core Lightning permissions",
-                            );
-                        }
-                        if let StringOrMap::String(c_lightning_mount) = value {
-                            service
-                                .volumes
-                                .push(format!("${{C_LIGHTNING_DATA_DIR}}:{}", c_lightning_mount));
-                        } else {
-                            bail!("LND mount must be a string");
                         }
                     }
                     "jwt-public-key" => {
@@ -616,6 +593,11 @@ pub fn convert_config(
     let replace_env_vars = HashMap::<String, String>::from([
         (env_var, main_port.to_string()),
         ("ELECTRUM_IP".to_string(), "${APP_ELECTRUM_IP}".to_string()),
+        ("LND_IP".to_string(), "${APP_LND_SERVICE_IP}".to_string()),
+        (
+            "C_LIGHTNING_IP".to_string(),
+            "${APP_CORE_LIGHTNING_SERVICE_IP}".to_string(),
+        ),
         ("ELECTRUM_PORT".to_string(), "50001".to_string()),
     ]);
 
