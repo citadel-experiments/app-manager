@@ -9,12 +9,12 @@ ENV PATH=/root/.cargo/bin:$PATH
 
 WORKDIR /app
 COPY . /app
-RUN cargo build --bin app-cli --release --features=cli,umbrel,git
+RUN cargo build --bin app-cli --features=cli,umbrel,git
 
 FROM ubuntu:22.10
 
 RUN apt update && apt install -y libssl3 ca-certificates && apt clean && rm -rf /var/lib/apt/lists/*
 
-COPY --from=build-env /app/target/release/app-cli /
+COPY --from=build-env /app/target/debug/app-cli /
 
 CMD ["/app-cli"]
