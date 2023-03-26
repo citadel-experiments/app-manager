@@ -12,7 +12,10 @@ use tempdir::TempDir;
 
 #[cfg(feature = "umbrel")]
 use crate::map;
-use crate::{composegenerator::load_config_as_v4, constants::{MINIMUM_COMPATIBLE_APP_MANAGER, RESERVED_APP_NAMES}};
+use crate::{
+    composegenerator::load_config_as_v4,
+    constants::{MINIMUM_COMPATIBLE_APP_MANAGER, RESERVED_APP_NAMES},
+};
 
 mod git;
 
@@ -176,7 +179,10 @@ pub fn download_apps(citadel_root: &str) -> Result<()> {
                     let entry = entry?;
                     let app_id = entry.file_name().to_str().unwrap().to_string();
                     if RESERVED_APP_NAMES.contains(&app_id.as_str()) {
-                        eprintln!("App store {} tries to install app {} which is a reserved name.", out_app_store.id, app_id);
+                        eprintln!(
+                            "App store {} tries to install app {} which is a reserved name.",
+                            out_app_store.id, app_id
+                        );
                         continue;
                     }
                     if installed_apps.contains(&app_id) {

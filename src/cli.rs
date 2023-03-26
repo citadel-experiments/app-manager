@@ -45,11 +45,11 @@ struct PortCacheMapEntry {
 type PortCacheMap = HashMap<u16, PortCacheMapEntry>;
 
 static RESERVED_PORTS: [u16; 5] = [
-    80,   // Dashboard
-    443,  // Dashboard SSL
-    8080, // LND REST
-    8333, // Bitcoin Core P2P
-    10009,// LND gRPC
+    80,    // Dashboard
+    443,   // Dashboard SSL
+    8080,  // LND REST
+    8333,  // Bitcoin Core P2P
+    10009, // LND gRPC
 ];
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
