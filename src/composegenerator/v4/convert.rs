@@ -190,11 +190,10 @@ fn define_ip_addresses(
 ) -> Result<()> {
     let services = output.services.as_mut().unwrap();
     for (service_name, service) in services {
-        if containers
-            .get(service_name)
-            .unwrap()
+        let original_service = && containers.get(service_name).unwrap();
+        if original_service
             .assign_fixed_ip
-            .unwrap_or(true)
+            .unwrap_or(true) && original_service.network_mode.is_none()
         {
             service.networks = Some(bmap! {
                 "default" => NetworkEntry {
