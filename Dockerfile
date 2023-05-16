@@ -1,5 +1,5 @@
 # TODO: Use a better image for doing this, but this seems to work
-FROM ubuntu:22.10 as build-env
+FROM ubuntu:23.10 as build-env
 RUN apt update && apt install -y libssl-dev pkg-config build-essential cmake curl llvm-14 clang-14
 
 RUN curl https://sh.rustup.rs -sSf | \
@@ -11,7 +11,7 @@ WORKDIR /app
 COPY . /app
 RUN cargo build --bin app-cli --release --features=cli,umbrel,git
 
-FROM ubuntu:22.10
+FROM ubuntu:23.10
 
 RUN apt update && apt install -y libssl3 ca-certificates && apt clean && rm -rf /var/lib/apt/lists/*
 
